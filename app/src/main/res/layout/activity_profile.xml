@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="hung.armylife.ProfileActivity"
+    android:background="@color/accent_material_dark">
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:paddingBottom="15dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:orientation="horizontal"
+                    android:id="@+id/ll">
+                </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="張誌宏"
+                        android:id="@+id/textView15"
+                        android:textSize="25sp"
+                        android:textColor="#ffffff"
+                        android:layout_centerHorizontal="true"
+                        android:layout_below="@+id/ll" />
+
+                    <hung.armylife.widget.CircleImg
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
+                        android:id="@+id/circleImg"
+                        android:clickable="true"
+                        android:layout_below="@+id/textView15"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="10dp"
+                        android:src="@drawable/com_facebook_profile_picture_blank_square" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxEms="10"
+                        android:id="@+id/txt_Feeling"
+                        android:textColor="#ffffff"
+                        android:ellipsize="end"
+                        android:singleLine="true"
+                        android:layout_below="@+id/circleImg"
+                        android:layout_marginTop="10dp"
+                        android:layout_centerHorizontal="true" />
+
+                    <ImageButton
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:id="@+id/imageButton"
+                        android:src="@android:drawable/ic_menu_edit"
+                        android:background="#00ffffff"
+                        android:scaleType="fitXY"
+                        android:layout_toRightOf="@+id/txt_Feeling"
+                        android:layout_alignBottom="@+id/txt_Feeling"
+                        android:layout_marginLeft="5dp"
+                        android:clickable="true" />
+
+                <android.support.v7.widget.CardView
+                    android:layout_marginTop="10dp"
+                    android:layout_below="@id/imageButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="8dp">
+
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/linearLayout_EntryDate"
+                            android:clickable="true">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="入伍日期"
+                                android:textSize="20sp"
+                                android:textColor="#000000" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="15dp"
+                                android:layout_marginTop="8dp"
+                                android:text="點擊編輯"
+                                android:id="@+id/txt_EntryDate" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="#756b6b6b"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginRight="30dp"
+                            android:layout_marginBottom="10dp">
+                        </LinearLayout>
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/linearLayout_Period"
+                            android:clickable="true">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="役期"
+                                android:textSize="20sp"
+                                android:layout_marginTop="8dp"
+                                android:textColor="#000000" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="15dp"
+                                android:layout_marginTop="8dp"
+                                android:text="點擊編輯"
+                                android:id="@+id/txt_Period" />
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="#756b6b6b"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginRight="30dp"
+                            android:layout_marginBottom="10dp">
+                        </LinearLayout>
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/linearLayout_Redeem"
+                            android:clickable="true">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="折抵天數"
+                                android:textSize="20sp"
+                                android:layout_marginTop="8dp"
+                                android:textColor="#000000" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="15dp"
+                                android:layout_marginTop="8dp"
+                                android:text="點擊編輯"
+                                android:id="@+id/txt_Redeem" />
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="#756b6b6b"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginRight="30dp"
+                            android:layout_marginBottom="10dp">
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/linearLayout_Sequence"
+                            android:clickable="true">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="梯次"
+                                android:textSize="20sp"
+                                android:layout_marginTop="8dp"
+                                android:textColor="#000000" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="15dp"
+                                android:layout_marginTop="8dp"
+                                android:text="點擊編輯"
+                                android:id="@+id/txt_Sequence" />
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="#756b6b6b"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginRight="30dp"
+                            android:layout_marginBottom="10dp">
+                        </LinearLayout>
+                    </LinearLayout>
+                </android.support.v7.widget.CardView>
+            </RelativeLayout>
+        </ScrollView>
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:popupTheme="@style/AppTheme.PopupOverlay"/>
+</RelativeLayout>
