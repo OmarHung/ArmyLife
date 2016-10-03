@@ -48,7 +48,7 @@ public class NewsFragment extends Fragment {
     private MyAdapter myAdapter;
     private String WebURL = "http://www.mmstop.net/bbs/news_list.asp?action=more&c_id=4&s_id=5&page=";
     private String HomeURL =  "http://www.mmstop.net/bbs/";
-    private int TIME_OUT=10000;
+    private int TIME_OUT=20000;
     private View view;
     private Handler mHandler;
     private ProgressDialog PDialog = null;
@@ -153,8 +153,10 @@ public class NewsFragment extends Fragment {
                     msg.what = 2;
                     mHandler.sendMessage(msg);
                     //e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                } catch (Exception e) {
+                    Message msg = new Message();
+                    msg.what = 3;
+                    mHandler.sendMessage(msg);
                 } finally {
                 }
             }
@@ -186,6 +188,12 @@ public class NewsFragment extends Fragment {
                 }else if(msg.what==2) {
                     Toast.makeText(getContext(), "連線逾時", Toast.LENGTH_SHORT).show();
                     Log.d("連線逾時", "連線逾時");
+                    PDialog.dismiss();
+                    //NewsList.setAdapter(myAdapter);
+                }else if(msg.what==3) {
+                    Toast.makeText(getContext(), "無網路", Toast.LENGTH_SHORT).show();
+                    Log.d("無網路", "無網路");
+                    PDialog.dismiss();
                     //NewsList.setAdapter(myAdapter);
                 }
             }
@@ -222,8 +230,10 @@ public class NewsFragment extends Fragment {
                     msg.what = 2;
                     mHandler.sendMessage(msg);
                     //e.printStackTrace();
-                }  catch (IOException e) {
-                    e.printStackTrace();
+                } catch (Exception e) {
+                    Message msg = new Message();
+                    msg.what = 3;
+                    mHandler.sendMessage(msg);
                 }
             }
         };
