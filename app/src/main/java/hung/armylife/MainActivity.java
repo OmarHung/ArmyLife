@@ -3,6 +3,7 @@ package hung.armylife;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -31,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ImageButton mFriendImg;
     private ImageButton mNewsImg;
     private ImageButton mKnowledgeImg;
+    private TextView txtHome, txtFriend, txtNews, txtKnowledge;
     private CountDownFragment countDownFragment;
     private FriendFragment friendFragment;
     private NewsFragment newsFragment;
@@ -70,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         changeTab(0);
         resetImg();
         mHomeImg.setImageResource(R.drawable.ic_event_black_48dp);
+        txtHome.setTextColor(Color.BLACK);
     }
     private void changeTab(int index) {
         currentIndex = index;
@@ -181,6 +185,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mFriendImg = (ImageButton) findViewById(R.id.imgButtom_Friend);
         mNewsImg = (ImageButton) findViewById(R.id.imgButtom_News);
         mKnowledgeImg = (ImageButton) findViewById(R.id.imgButtom_Knowledge);
+
+        txtHome = (TextView) findViewById(R.id.txt_Home);
+        txtFriend = (TextView) findViewById(R.id.txt_Friend);
+        txtNews = (TextView) findViewById(R.id.txt_News);
+        txtKnowledge = (TextView) findViewById(R.id.txt_Knowledge);
     }
     /*
     private void initViewPage() {
@@ -236,21 +245,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //mViewPager.setCurrentItem(0);
                 resetImg();
                 mHomeImg.setImageResource(R.drawable.ic_event_black_48dp);
+                txtHome.setTextColor(Color.BLACK);
                 break;
             case R.id.tab_Friend:
                 //mViewPager.setCurrentItem(1);
                 resetImg();
                 mFriendImg.setImageResource(R.drawable.ic_people_outline_black_48dp);
+                txtFriend.setTextColor(Color.BLACK);
                 break;
             case R.id.tab_News:
                 //mViewPager.setCurrentItem(2);
                 resetImg();
                 mNewsImg.setImageResource(R.drawable.ic_news_black_48dp);
+                txtNews.setTextColor(Color.BLACK);
                 break;
             case R.id.tab_Knowledge:
                 //mViewPager.setCurrentItem(3);
                 resetImg();
                 mKnowledgeImg.setImageResource(R.drawable.ic_help_outline_black_48dp);
+                txtKnowledge.setTextColor(Color.BLACK);
                 break;
             default:
                 break;
@@ -264,6 +277,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mFriendImg.setImageResource(R.drawable.ic_people_outline_gray_48dp);
         mNewsImg.setImageResource(R.drawable.ic_news_gray_48dp);
         mKnowledgeImg.setImageResource(R.drawable.ic_help_outline_gray_48dp);
+
+        txtHome.setTextColor(Color.GRAY);
+        txtFriend.setTextColor(Color.GRAY);
+        txtNews.setTextColor(Color.GRAY);
+        txtKnowledge.setTextColor(Color.GRAY);
         //mFoodImg.setImageResource(R.drawable.food_w);
         //mMapImg.setImageResource(R.drawable.map_w);
         //mFriendImg.setImageResource(R.drawable.friend_w);

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relativelayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragment.NewsFragment"
@@ -10,6 +11,28 @@
         android:layout_height="match_parent"
         android:id="@+id/rv_newslist">
     </ListView>
+    <TextView
+        android:id="@+id/txt_disconnect"
+        android:text="無法加載新聞\n請連接網路"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:layout_centerInParent="true"
+        android:visibility="invisible" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/retry_button"
+        android:id="@+id/imgButton_retry"
+        android:background="@color/noColor"
+        android:layout_centerInParent="false"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:visibility="invisible"
+        android:layout_below="@+id/txt_disconnect" />
     <!--
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"

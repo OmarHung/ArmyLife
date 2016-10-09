@@ -31,4 +31,5 @@ dependencies {
     compile 'com.android.support:design:23.1.0'
     compile 'com.android.support:support-v4:23.2.1'
     compile 'org.jsoup:jsoup:1.9.2'
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha9'
 }

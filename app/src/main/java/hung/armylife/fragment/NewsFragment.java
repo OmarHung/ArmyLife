@@ -3,6 +3,7 @@ package hung.armylife.fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
@@ -16,7 +17,9 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.jsoup.Jsoup;
@@ -41,6 +44,8 @@ import hung.armylife.R;
 public class NewsFragment extends Fragment {
     //private RecyclerView NewsList=null;
     private ListView NewsList=null;
+    private TextView txt_Disconnect;
+    private ImageButton img_Button_Retry;
     private int nowPage=1;
     private int totalPage;
     private boolean isLoadingMore;
@@ -65,6 +70,17 @@ public class NewsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_news, container, false);
         // = (RecyclerView) view.findViewById(R.id.rv_newslist);
+        txt_Disconnect = (TextView) view.findViewById(R.id.txt_disconnect);
+        img_Button_Retry = (ImageButton) view.findViewById(R.id.imgButton_retry);
+        img_Button_Retry.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NewsList.setVisibility(View.VISIBLE);
+                txt_Disconnect.setVisibility(View.INVISIBLE);
+                img_Button_Retry.setVisibility(View.INVISIBLE);
+                iniPage();
+            }
+        });
         NewsList = (ListView) view.findViewById(R.id.rv_newslist);
         myAdapter = new MyAdapter(getContext(), myDataset);
         NewsList.setAdapter(myAdapter);
@@ -161,7 +177,7 @@ public class NewsFragment extends Fragment {
                 }
             }
         };
-        PDialog = ProgressDialog.show(NewsFragment.this.getContext(), "請稍後...", "載入新聞中...", true);
+        PDialog = ProgressDialog.show(NewsFragment.this.getContext(), "載入新聞中...", "請稍後...", true);
         new Thread(runnable).start();
         /*
         mHandler = new Handler(){
@@ -185,7 +201,16 @@ public class NewsFragment extends Fragment {
                     myAdapter.notifyDataSetChanged();
                     PDialog.dismiss();
                     Log.d("notifyDataSetChanged", "notifyDataSetChanged");
-                }else if(msg.what==2) {
+                }else {
+                    myDataset.clear();
+                    myAdapter.notifyDataSetChanged();
+                    PDialog.dismiss();
+                    NewsList.setVisibility(View.INVISIBLE);
+                    txt_Disconnect.setVisibility(View.VISIBLE);
+                    img_Button_Retry.setVisibility(View.VISIBLE);
+                }
+                /*
+                else if(msg.what==2) {
                     Toast.makeText(getContext(), "連線逾時", Toast.LENGTH_SHORT).show();
                     Log.d("連線逾時", "連線逾時");
                     PDialog.dismiss();
@@ -195,7 +220,7 @@ public class NewsFragment extends Fragment {
                     Log.d("無網路", "無網路");
                     PDialog.dismiss();
                     //NewsList.setAdapter(myAdapter);
-                }
+                } */
             }
         };
     }
@@ -237,7 +262,7 @@ public class NewsFragment extends Fragment {
                 }
             }
         };
-        PDialog = ProgressDialog.show(NewsFragment.this.getContext(), "請稍後...", "載入新聞中...", true);
+        PDialog = ProgressDialog.show(NewsFragment.this.getContext(), "載入新聞中...", "請稍後...", true);
         new Thread(mrunnable).start();
         /*
         mHandler = new Handler(){

@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="hung.armylife.MainActivity"
+    tools:context="hung.soldiercountdown.MainActivity"
     android:contextClickable="true">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -30,7 +32,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:orientation="vertical">
-                    <ImageButton
+                <ImageButton
                     android:id="@+id/imgButtom_Home"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
@@ -40,9 +42,10 @@
                     android:scaleType="fitCenter" />
 
                 <TextView
+                    android:id="@+id/txt_Home"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="#000000"
                     android:text="倒數"/>
 
             </LinearLayout>
@@ -62,9 +65,10 @@
                     android:src="@drawable/ic_people_outline_black_48dp"
                     android:scaleType="fitCenter" />
                 <TextView
+                    android:id="@+id/txt_Friend"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="#000000"
                     android:text="回報" />
             </LinearLayout>
             <LinearLayout
@@ -83,9 +87,10 @@
                     android:src="@drawable/ic_news_black_48dp"
                     android:scaleType="fitCenter" />
                 <TextView
+                    android:id="@+id/txt_News"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="#000000"
                     android:text="新聞" />
             </LinearLayout>
             <LinearLayout
@@ -104,9 +109,10 @@
                     android:src="@drawable/ic_help_outline_black_48dp"
                     android:scaleType="fitCenter" />
                 <TextView
+                    android:id="@+id/txt_Knowledge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="#000000"
                     android:text="更多" />
             </LinearLayout>
         </LinearLayout>
