@@ -15,6 +15,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -85,18 +86,20 @@ public class ContactFragment extends Fragment {
         mDBHelper = new DBHelper(getContext());
         db = mDBHelper.getReadableDatabase();
         mCursor=db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
-        if (getContext().checkSelfPermission(Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED ||
-                getContext().checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED ||
-                getContext().checkSelfPermission(Manifest.permission.RECEIVE_SMS) != PackageManager.PERMISSION_GRANTED) {
-            new AlertDialog.Builder(getContext())
-                    .setTitle("取得相關權限")
-                    .setMessage("您必須同意讓ArmyLife傳送簡訊與撥打電話才能順利使用回報功能")
-                    .setPositiveButton("取得權限", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            requestPermissions(new String[]{Manifest.permission.SEND_SMS,Manifest.permission.CALL_PHONE,Manifest.permission.RECEIVE_SMS}, REQUEST);
-                        }
-                    }).show();
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (getContext().checkSelfPermission(Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED ||
+                    getContext().checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED ||
+                    getContext().checkSelfPermission(Manifest.permission.RECEIVE_SMS) != PackageManager.PERMISSION_GRANTED) {
+                new AlertDialog.Builder(getContext())
+                        .setTitle("取得相關權限")
+                        .setMessage("您必須同意讓ArmyLife傳送簡訊與撥打電話才能順利使用回報功能")
+                        .setPositiveButton("取得權限", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                requestPermissions(new String[]{Manifest.permission.SEND_SMS, Manifest.permission.CALL_PHONE, Manifest.permission.RECEIVE_SMS}, REQUEST);
+                            }
+                        }).show();
+            }
         }
         fab = (FloatingActionButton) view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
