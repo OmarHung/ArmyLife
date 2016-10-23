@@ -47,8 +47,11 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     private int mYear, mMonth, mDay;
     final String[] Item_Period = {"4個月", "4個月5天", "1年", "1年15天", "3年", "4年"};
     AlertDialog dialog;
-    private SharedPreferences profile;
-    private String data="Date", SP_Feeling="Feeling", SP_EntryDate="EntryDate", SP_Period="Period", SP_Redeem="Redeem", SP_Sequence="Sequence", SP_First="FIRST", SP_Photo="Photo";
+    //private SharedPreferences profile;
+    private MySharedPreferences profile;
+    private MySQLHelper mySQLHelper;
+    private String strEntrydate, strExitdate, strPeriod, strRedeem, strSequence, strmood;
+    //private String data="Date", SP_Mood="Mood", SP_EntryDate="EntryDate", SP_Period="Period", SP_Redeem="Redeem", SP_Sequence="Sequence", SP_First="FIRST", SP_Photo="Photo";
     final Calendar c = Calendar.getInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,10 +63,12 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             window.setStatusBarColor(getResources().getColor(R.color.cardview_dark_background));
         }
         setContentView(R.layout.activity_profile);
-        profile = getSharedPreferences(data, 0);
-        int first = profile.getInt(SP_First, 0);
+        //profile = getSharedPreferences(data, 0);
+        profile = new MySharedPreferences(this);
+        mySQLHelper = new MySQLHelper(ProfileActivity.this);
+        int first = profile.get_first();
         if(first==0)
-            profile.edit().putInt(SP_First, 1).commit();
+            profile.set_first(1);
         // 設定初始日期
         mYear = c.get(Calendar.YEAR);
         mMonth = c.get(Calendar.MONTH);
@@ -115,7 +120,9 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                                 EditText editText = (EditText) item_Text.findViewById(R.id.editText);
                                 String str = editText.getText().toString();
                                 txtFeeling.setText(str);
-                                profile.edit().putString(SP_Feeling, str).commit();
+                                strmood = str;
+                                profile.set_mood(str);
+                                mySQLHelper.Update(profile.get_facebook_id(),"mood",str);
                             }
                         })
                         .show();
@@ -152,7 +159,9 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                                                   int monthOfYear, int dayOfMonth) {
                                 // 完成選擇，顯示日期
                                 txtEntryDate.setText(year + "/" + (monthOfYear + 1) + "/"+ dayOfMonth);
-                                profile.edit().putString(SP_EntryDate, year + "/" + (monthOfYear + 1) + "/"+ dayOfMonth).commit();
+                                strEntrydate = year + "/" + (monthOfYear + 1) + "/"+ dayOfMonth;
+                                profile.set_entryate(year + "/" + (monthOfYear + 1) + "/"+ dayOfMonth);
+                                mySQLHelper.Update(profile.get_facebook_id(),"entrydate",year + "/" + (monthOfYear + 1) + "/"+ dayOfMonth);
                             }
                         }, mYear, mMonth, mDay).show();
                 break;
@@ -163,7 +172,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 txtPeriod.setText(Item_Period[which]);
-                                profile.edit().putInt(SP_Period, which).commit();
+                                strPeriod = Item_Period[which];
+                                profile.set_peroid(which);//.edit().putInt(SP_Period, which).commit();
                                 dialog.dismiss();
                             }
                         }).show();
@@ -178,7 +188,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                                 EditText editText = (EditText) item_Num.findViewById(R.id.editText);
                                 String str = editText.getText().toString();
                                 txtRedeem.setText(str);
-                                profile.edit().putString(SP_Redeem, str).commit();
+                                strRedeem = str;
+                                profile.set_redeem(str);//.edit().putString(SP_Redeem, str).commit();
                             }
                         }).show();
                 break;
@@ -191,7 +202,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                             public void onClick(DialogInterface dialog, int which) {
                                 EditText editText = (EditText) item_Num.findViewById(R.id.editText);
                                 String str = editText.getText().toString();
-                                profile.edit().putString(SP_Sequence, str).commit();
+                                strSequence = str;
+                                profile.set_sequence(str);//.edit().putString(SP_Sequence, str).commit();
                                 txtSequence.setText(str);
                             }
                         }).show();
@@ -245,28 +257,39 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             // Android 2.2以上才有內建Base64，其他要自已找Libary或是用Blob存入SQLite
             // 把byte變成base64
             String base64 = Base64.encodeToString(bytes, Base64.DEFAULT);
-            profile.edit().putString(SP_Photo,base64).commit();
+            //profile.edit().putString(SP_Photo,base64).commit();
         }
     }
     public void readData(){
-        String photo = profile.getString(SP_Photo,"");
-        //Log.d("Photo",photo);
-        if(!photo.equals("")) {
-            byte bytes[] = Base64.decode(photo, Base64.DEFAULT);
-            Drawable drawable = new BitmapDrawable(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
-            circleImg.setImageDrawable(drawable);
-        }
-        txtFeeling.setText(profile.getString(SP_Feeling,""));
-        //入伍日期
-        txtEntryDate.setText(profile.getString(SP_EntryDate, "點擊編輯"));
-        //役期
-        if(profile.getInt(SP_Period,-1)==-1)
-            txtPeriod.setText("點擊編輯");
+        strEntrydate = profile.get_entryate();//.getString(SP_EntryDate, "編輯");
+        //strExitdate;
+        strmood = profile.get_mood();//.getString(SP_Mood,"");
+        if(profile.get_peroid()==-1)//.getInt(SP_Period,-1)==-1)
+            strPeriod = "未設定";
         else
-            txtPeriod.setText(Item_Period[profile.getInt(SP_Period, -1)]);
+            strPeriod = Item_Period[profile.get_peroid()];//.getInt(SP_Period, -1)];
+        strRedeem = profile.get_redeem();//.getString(SP_Redeem, "點擊編輯");
+        strSequence = profile.get_sequence();//.getString(SP_Sequence,"點擊編輯");
+        //String photo = profile.getString(SP_Photo,"");
+        //if(!photo.equals("")) {
+        //    byte bytes[] = Base64.decode(photo, Base64.DEFAULT);
+        //    Drawable drawable = new BitmapDrawable(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
+        //    circleImg.setImageDrawable(drawable);
+        //}
+        txtFeeling.setText(strmood);
+        //入伍日期
+        txtEntryDate.setText(strEntrydate);
+        //役期
+        txtPeriod.setText(strPeriod);
         //折抵天數
-        txtRedeem.setText(profile.getString(SP_Redeem, "點擊編輯"));
+        txtRedeem.setText(strRedeem);
         //梯次
-        txtSequence.setText(profile.getString(SP_Sequence,"點擊編輯"));
+        txtSequence.setText(strSequence);
+    }
+    protected void onPause() {
+        super.onPause();
+        String facebook_id = profile.get_facebook_id();//.getString("facebook_id","未登入");
+        //new FirebaseHelper(ProfileActivity.this).Update_Mood(facebook_id, strmood);
+        Log.d("pause","pause");
     }
 }

@@ -32,4 +32,25 @@
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
 
+    <TextView
+        android:text="Name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="55dp"
+        android:id="@+id/txt_FB_Name"
+        android:textSize="30sp"
+        android:textStyle="normal|bold"
+        android:textColor="#FF000000" />
+
+    <com.facebook.login.widget.ProfilePictureView
+        android:id="@+id/FB_Picture"
+        android:layout_width="@dimen/com_facebook_profilepictureview_preset_size_normal"
+        android:layout_height="@dimen/com_facebook_profilepictureview_preset_size_normal"
+        android:layout_below="@+id/txt_FB_Name"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp">
+    </com.facebook.login.widget.ProfilePictureView>
+
 </RelativeLayout>

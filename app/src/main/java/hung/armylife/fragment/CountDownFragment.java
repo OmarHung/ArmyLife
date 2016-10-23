@@ -4,14 +4,30 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.facebook.share.model.AppInviteContent;
+import com.facebook.share.widget.AppInviteDialog;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -22,17 +38,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import hung.armylife.LoginActivity;
+import hung.armylife.MySQLHelper;
+import hung.armylife.MySharedPreferences;
 import hung.armylife.ProfileActivity;
 import hung.armylife.R;
-import hung.armylife.custom_dialog.FlowDialog;
 import hung.armylife.useless.Standard;
 import hung.armylife.widget.CircleImg;
 
 public class CountDownFragment extends Fragment {
     private View mView;
-    private TextView txt_CountDown, txt_EntryDate, txt_ExitDate, txt_PassDay;
+    private TextView txt_CountDown, txt_EntryDate, txt_ExitDate, txt_PassDay, txt_Invite;
     private Standard standard = new Standard();
     private ImageButton imageButtonProfile;
+    private Button btn_Invite;
     private String EntryDate;
     private String OriExitDate;
     private String NewExitDate;
@@ -44,7 +63,8 @@ public class CountDownFragment extends Fragment {
     private Date dateNewExit;
     private Date dateNow;
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-    private SharedPreferences profile;
+    //private SharedPreferences profile;
+    private MySharedPreferences profile;
     final String[] Item_Period = {"4個月", "4個月5天", "1年", "1年15天", "3年", "4年"};
     private ArrayList<Integer> mDataType = new ArrayList<Integer>();
     final Calendar c = Calendar.getInstance();
@@ -56,6 +76,10 @@ public class CountDownFragment extends Fragment {
     private int overallYScroll = 0;
     private boolean Touch=false;
     private int ItemHigh, ItemAmount=10;
+    private String facebook_id;
+    private String Friend_id;
+    private ArrayList<String> FriendList = new ArrayList<String>();
+    private MySQLHelper mySQLHelper;
     // TODO: Rename and change types and number of parameters
     public static CountDownFragment newInstance() {
         CountDownFragment fragment = new CountDownFragment();
@@ -66,7 +90,9 @@ public class CountDownFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //Log.d("onCreate","onCreate");
-        profile = getActivity().getSharedPreferences(data, 0);
+        //profile = getActivity().getSharedPreferences(data, 0);
+        profile = new MySharedPreferences(CountDownFragment.this.getContext());
+        mySQLHelper = new MySQLHelper(CountDownFragment.this.getContext());
         mYear = c.get(Calendar.YEAR);
         mMonth = c.get(Calendar.MONTH);
         mDay = c.get(Calendar.DAY_OF_MONTH);
@@ -80,10 +106,10 @@ public class CountDownFragment extends Fragment {
         initView(mView);
     }
     public void getProfile() {
-        EntryDate=profile.getString(SP_EntryDate, "");
-        Redeem=profile.getString(SP_Redeem, "");  //折抵
-        if (profile.getInt(SP_Period, -1) > 0) {
-            Period = Item_Period[profile.getInt(SP_Period, -1)]; //役期
+        EntryDate=profile.get_entryate();//.getString(SP_EntryDate, "");
+        Redeem=profile.get_redeem();//.getString(SP_Redeem, "");  //折抵
+        if (profile.get_peroid()>0) {//.getInt(SP_Period, -1) > 0) {
+            Period = Item_Period[profile.get_peroid()];//.getInt(SP_Period, -1)]; //役期
         }
         if (EntryDate.length() > 0) {
             OriExitDate = EntryDate.replace(EntryDate.substring(0, 4), String.valueOf(Integer.valueOf(EntryDate.substring(0, 4)) + 1));
@@ -99,6 +125,7 @@ public class CountDownFragment extends Fragment {
         }catch (ParseException e) {
             e.printStackTrace();
         }
+        facebook_id = profile.get_facebook_id();//.getString("facebook_id","未登入");
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -110,15 +137,35 @@ public class CountDownFragment extends Fragment {
 
     @TargetApi(Build.VERSION_CODES.M)
     public void initView(View view) {
+        txt_Invite = (TextView) view.findViewById(R.id.txt_invite);
+        btn_Invite = (Button) view.findViewById(R.id.btn_invite);
+        btn_Invite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String appLinkUrl, previewImageUrl;
+                appLinkUrl = "https://www.mydomain.com/myapplink";
+                previewImageUrl = "https://www.mydomain.com/my_invite_image.jpg";
+                if (AppInviteDialog.canShow()) {
+                    AppInviteContent content = new AppInviteContent.Builder()
+                            .setApplinkUrl(appLinkUrl)
+                            .setPreviewImageUrl(previewImageUrl)
+                            .build();
+                    AppInviteDialog.show(CountDownFragment.this, content);
+                }
+            }
+        });
         txt_EntryDate = (TextView) view.findViewById(R.id.txt_EntryDate);
         txt_ExitDate = (TextView) view.findViewById(R.id.txt_ExitDate);
         txt_CountDown = (TextView) view.findViewById(R.id.txt_CountDownNum);
         txt_PassDay = (TextView) view.findViewById(R.id.txt_PassDay);
         if (getCountDownNum().length()>0) {
             txt_CountDown.setText(getCountDownNum());
+            mySQLHelper.Update(profile.get_facebook_id(),"countdown",getCountDownNum());
             txt_PassDay.setText(PassDay);
             txt_EntryDate.setText(EntryDate);
+            mySQLHelper.Update(profile.get_facebook_id(),"entrydate",EntryDate);
             txt_ExitDate.setText(NewExitDate);
+            mySQLHelper.Update(profile.get_facebook_id(),"exitdate",NewExitDate);
             if (Integer.valueOf(getCountDownNum()) < 0) {
                 txt_CountDown.setTextSize(100f);
                 txt_CountDown.setText("0");
@@ -140,13 +187,30 @@ public class CountDownFragment extends Fragment {
         myDataset = new ArrayList<Map<String,Object>>();
         myDataset.clear();
         mDataType.clear();
-        for(int i=0; i<7; i++){
-            Map<String, Object> item = new HashMap<String, Object>();
-            item.put("name", "Name"+i);
-            item.put("feeling", "Feeling"+i);
-            item.put("cd", i+"天");
-            myDataset.add(item);
-            if(i==6)
+        setFriendList(profile.get_friends());
+        String uriSelect="http://192.168.1.101/armyselect.php?facebook_id=";
+        for(int i=0; i<FriendList.size(); i++){
+            final StringRequest stringRequest = new StringRequest(uriSelect+FriendList.get(i),
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            Map<String, Object> item = new HashMap<String, Object>();
+                            item.put("name", getFriens_Info(response,"name"));
+                            item.put("feeling", getFriens_Info(response,"mood"));
+                            item.put("cd", getFriens_Info(response,"countdown")+"天");
+                            myDataset.add(item);
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e("TAG", error.getMessage(), error);
+                }
+            });
+            // Instantiate the RequestQueue.;
+            RequestQueue queue = Volley.newRequestQueue(CountDownFragment.this.getContext());
+            // Add the request to the RequestQueue.
+            queue.add(stringRequest);
+            if(i==FriendList.size()-1)
                 mDataType.add(1);
             else
                 mDataType.add(0);
@@ -202,6 +266,46 @@ public class CountDownFragment extends Fragment {
         });
         Touch=true;
         */
+    }
+    public String getFriens_Info(String mJSONText, String key) {
+        String result="";
+        try {
+            Log.d("JSONText",mJSONText);
+            JSONArray jsonArray = new JSONArray(mJSONText);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = ((JSONObject)jsonArray.get(i));
+                result = jsonObject.getString(key);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+    public void setFriendList(String Friend_id) {
+        int count=0;
+        int temp=0;
+        for(int i=0;i<Friend_id.length();i++) {
+            if(Friend_id.length()>0) {
+                if (Friend_id.substring(i, i + 1).equals(";")) {
+                    Log.d("setFriendList",Friend_id.substring(temp, i));
+                    FriendList.add(Friend_id.substring(temp, i));
+                    temp = i + 1;
+                    count += 1;
+                }else if(i==Friend_id.length()-1) {
+                    Log.d("setFriendList",Friend_id.substring(temp, Friend_id.length()));
+                    FriendList.add(Friend_id.substring(temp, Friend_id.length()));
+                }
+            }
+        }
+        if(FriendList.size()>0) {
+            recyclerView.setVisibility(View.VISIBLE);
+            btn_Invite.setVisibility(View.INVISIBLE);
+            txt_Invite.setVisibility(View.INVISIBLE);
+        }else {
+            recyclerView.setVisibility(View.INVISIBLE);
+            btn_Invite.setVisibility(View.VISIBLE);
+            txt_Invite.setVisibility(View.VISIBLE);
+        }
     }
     public int getMonthSpace(String date1, String date2) throws ParseException {
         Date d = null;
@@ -322,6 +426,7 @@ public class CountDownFragment extends Fragment {
             holder.txtName.setText(mData.get(position).get("name").toString());
             holder.txtFeeling.setText(mData.get(position).get("feeling").toString());
             holder.txtCountDown.setText(mData.get(position).get("cd").toString());
+            Log.d("onBindViewHolder", "onBindViewHolder "+ position);
             //holder.circleImg.setImageDrawable(R.drawable.);
         }
         @Override
