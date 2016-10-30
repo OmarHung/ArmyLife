@@ -87,13 +87,13 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onCancel() {
                 // App code
-                Log.d("FB", "CANCEL");
+                //Log.d("FB", "CANCEL");
             }
             //登入失敗
             @Override
             public void onError(FacebookException exception) {
                 // App code
-                Log.d("FB", exception.toString());
+                //Log.d("FB", exception.toString());
             }
         });
         // If the access token is available already assign it.
@@ -126,8 +126,13 @@ public class LoginActivity extends AppCompatActivity {
             protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
                 // Set the access token using
                 // currentAccessToken when it's loaded or set.
-                Log.d("FB", "onCurrentAccessTokenChanged");
-                getFacebookData();
+                //Log.d("FB", "onCurrentAccessTokenChanged "+currentAccessToken);
+                if(currentAccessToken==null) {
+                    profile.DelectAllData();
+                    mProfilePictureView.setVisibility(View.INVISIBLE);
+                    TXT_Name.setVisibility(View.INVISIBLE);
+                    TXT_Skip.setText("略過");
+                }else getFacebookData();
                 //mProfilePictureView.setVisibility(View.INVISIBLE);
                 //TXT_Name.setVisibility(View.INVISIBLE);
                 //TXT_Skip.setText("略過");
@@ -148,15 +153,10 @@ public class LoginActivity extends AppCompatActivity {
                             TXT_Name.setVisibility(View.VISIBLE);
                             TXT_Name.setText(object.optString("name"));
                             //讀出姓名 ID FB個人頁面連結
-                            Log.d("FB_name", object.optString("name"));
-                            Log.d("FB_link", object.optString("link"));
-                            Log.d("FB_id", object.optString("id"));
+                            //Log.d("FB_name", object.optString("name"));
+                            //Log.d("FB_link", object.optString("link"));
+                            //Log.d("FB_id", object.optString("id"));
                             TXT_Skip.setText("開始使用");
-                            try {
-                                Log.d("FB_picture", object.getJSONObject("picture").getJSONObject("data").optString("url"));
-                            } catch (JSONException e) {
-
-                            }
                             profile.set_facebook_id(object.optString("id"));//.edit().putString("facebook_id",object.optString("id")).commit();
                             profile.set_name(object.optString("name"));
                         }
@@ -183,7 +183,7 @@ public class LoginActivity extends AppCompatActivity {
                                         strFriends += o.getString("id");
                                     else
                                         strFriends += o.getString("id")+";";
-                                    Log.d("FB_Friends", o.getString("id"));
+                                    //Log.d("FB_Friends", o.getString("id"));
                                 }
                                 profile.set_friends(strFriends);
                                 MySQLHelper mySQLHelper = new MySQLHelper(LoginActivity.this);//.Update_Freinds_id(profile.getString("facebook_id","未登入"),strFriends);

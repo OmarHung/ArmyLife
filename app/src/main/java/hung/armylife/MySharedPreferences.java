@@ -17,6 +17,9 @@ public class MySharedPreferences {
     public MySharedPreferences(Context context) {
         profile = context.getSharedPreferences(SP_Date, 0);
     }
+    public void DelectAllData() {
+        profile.edit().clear().commit();
+    }
     public void set_first(int _first) {
         profile.edit().putInt(SP_First,_first).commit();
     }

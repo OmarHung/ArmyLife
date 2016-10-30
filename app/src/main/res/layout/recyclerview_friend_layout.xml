@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/design_fab_shadow_end_color">
-        <hung.armylife.widget.CircleImg
+        <com.facebook.login.widget.ProfilePictureView
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:src="@drawable/com_facebook_profile_picture_blank_square"

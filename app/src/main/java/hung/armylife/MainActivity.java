@@ -41,7 +41,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ArrayList<Fragment> fragmentArrayList;
     private Fragment mCurrentFrgment;
     private int currentIndex = 0;
-    private String data="Date", SP_Feeling="Feeling", SP_EntryDate="EntryDate", SP_Period="Period", SP_Redeem="Redeem", SP_SoldierCategory="SoldierCategory", SP_Sequence="Sequence", SP_Unit="Unit", SP_First="FIRST";
+    private MySharedPreferences profile;
+    //private String data="Date", SP_Feeling="Feeling", SP_EntryDate="EntryDate", SP_Period="Period", SP_Redeem="Redeem", SP_SoldierCategory="SoldierCategory", SP_Sequence="Sequence", SP_Unit="Unit", SP_First="FIRST";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,9 +53,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             window.setStatusBarColor(getResources().getColor(R.color.cardview_dark_background));
         }
         setContentView(R.layout.activity_main);
-        SharedPreferences profile;
-        profile = getSharedPreferences(data,0);
-        int first = profile.getInt(SP_First,0);
+        //SharedPreferences profile;
+        profile = new MySharedPreferences(this);// = getSharedPreferences(data,0);
+        int first = profile.get_first();//.getInt(SP_First,0);
         if(first==0)
             startActivity(new Intent(MainActivity.this, ProfileActivity.class));
         initView();
